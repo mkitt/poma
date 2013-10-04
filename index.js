@@ -1,4 +1,5 @@
 window.poma = (function() {
+  'use strict';
 
   var poma = function() {}
 
