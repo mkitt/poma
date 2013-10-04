@@ -107,7 +107,7 @@ describe('poma', function() {
 
   describe('#event', function() {
     var obj = {baller:1}
-    var event = poma.event('custom:event', obj, fixture)
+    var event = poma.event('custom:event', obj)
 
     it('returns an event with eventName of "custom:event"', function() {
       expect(event.eventName).to.be('custom:event')

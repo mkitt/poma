@@ -47,14 +47,13 @@ Handles either [`Node`][node] or [`NodeList`][nodelist] elements.
 poma.once(elements, 'tap', tapped)
 ```
 
-### poma.event(type, data={}, target=document)
+### poma.event(type, data={})
 `@returns Event`
 
-Create a custom [`event`][event] with an optional data object and
-target.
+Create a custom [`event`][event] with an optional data object.
 
 ```javascript
-poma.event('custom:event', {bling: 1}, element)
+poma.event('custom:event', {bling: 1})
 ```
 
 
@@ -64,7 +63,7 @@ poma.event('custom:event', {bling: 1}, element)
 Dispatches a custom event from the node, with an optional data object.
 The second option can either be an `eventType` string or an
 [`Event`][event] object. If it's an [`Event`][event] object, the `data`
-parameter is ignored.  Handles either [`Node`][node] or
+parameter is ignored. Handles either [`Node`][node] or
 [`NodeList`][nodelist] elements.
 
 ```javascript
@@ -72,7 +71,7 @@ parameter is ignored.  Handles either [`Node`][node] or
 poma.trigger(document, 'custom:event', {bling: 1})
 
 // dispatch an already created event..
-var event = poma.event('custom:event', {bling: 1}, element)
+var event = poma.event('custom:event', {bling: 1})
 poma.trigger(element, event)
 ```
 

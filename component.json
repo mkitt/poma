@@ -2,7 +2,7 @@
   "name": "poma",
   "repo": "mkitt/poma",
   "description": "Minimal utility library for modern browsers.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [],
   "dependencies": {},
   "development": {},

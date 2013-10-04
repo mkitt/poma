@@ -42,17 +42,16 @@ window.poma = (function() {
     return node
   }
 
-  poma.event = function(type, data, target) {
+  poma.event = function(type, data) {
     var e = document.createEvent('HTMLEvents')
     e.initEvent(type, true, true)
     e.eventName = type
-    e.target = target || document
     e.data = data || {}
     return e
   }
 
   poma.trigger = function(node, type, data) {
-    var e = (typeof type === 'string') ? poma.event(type, data, node) : type
+    var e = (typeof type === 'string') ? poma.event(type, data) : type
     var f = _metafunc(node)
     return poma[f](node, 'dispatchEvent', e)
   }
