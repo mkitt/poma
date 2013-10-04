@@ -1,20 +1,20 @@
-/*global zip */
-describe('zip', function() {
+/*global poma */
+describe('poma', function() {
 
   var el = document.body.querySelector('#fixture')
   var noop = function(e) {}
 
   describe('@instance', function() {
     it('is accessible in the global namespace', function() {
-      expect(zip).not.to.be(null)
+      expect(poma).not.to.be(null)
     })
 
   })
 
 
   describe('#matches', function() {
-    it('sets zip.matches to a function', function() {
-      expect(typeof zip.matches).to.be('function')
+    it('sets poma.matches to a function', function() {
+      expect(typeof poma.matches).to.be('function')
     })
   })
 
@@ -22,16 +22,16 @@ describe('zip', function() {
   describe('#on', function() {
     it('adds an event listener', function() {
       var callback = sinon.spy()
-      zip.on(el, 'click', callback)
+      poma.on(el, 'click', callback)
       el.click()
       expect(callback.called).to.be.ok()
-      zip.off(el, 'click', callback)
+      poma.off(el, 'click', callback)
     })
 
     it('returns the node for chaining ', function() {
-      var node = zip.on(el, 'click', noop)
+      var node = poma.on(el, 'click', noop)
       expect(node).to.be(el)
-      zip.off(el, 'click', noop)
+      poma.off(el, 'click', noop)
     })
   })
 
@@ -39,15 +39,15 @@ describe('zip', function() {
   describe('#off', function() {
     it('removes an event listener', function() {
       var callback = sinon.spy()
-      zip.on(el, 'click', callback)
-      zip.off(el, 'click', callback)
+      poma.on(el, 'click', callback)
+      poma.off(el, 'click', callback)
       el.click()
       expect(callback.called).not.to.be.ok()
     })
 
     it('returns the node for chaining ', function() {
-      zip.on(el, 'click', noop)
-      var node = zip.off(el, 'click', noop)
+      poma.on(el, 'click', noop)
+      var node = poma.off(el, 'click', noop)
       expect(node).to.be(el)
     })
   })
@@ -56,7 +56,7 @@ describe('zip', function() {
   describe('#once', function() {
     it('only responds to a single call', function() {
       var callback = sinon.spy()
-      zip.once(el, 'click', callback)
+      poma.once(el, 'click', callback)
       el.click()
       el.click()
       expect(callback.calledOnce).to.be.ok()

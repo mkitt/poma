@@ -1,24 +1,24 @@
-window.zip = (function() {
+window.poma = (function() {
 
-  var zip = function() {}
+  var poma = function() {}
 
-  zip.matches = (function() {
+  poma.matches = (function() {
     var b = document.body
     return b.matches || b.webkitMatchesSelector || b.mozMatchesSelector || b.msMatchesSelector
   })();
 
 
-  zip.on = function(node, type, fn) {
+  poma.on = function(node, type, fn) {
     node.addEventListener(type, fn, false)
     return node
   }
 
-  zip.off = function(node, type, fn) {
+  poma.off = function(node, type, fn) {
     node.removeEventListener(type, fn, false)
     return node
   }
 
-  zip.once = function(node, type, fn) {
+  poma.once = function(node, type, fn) {
     var handler = function(e) {
       node.removeEventListener(type, handler, false)
       fn(e)
@@ -27,7 +27,7 @@ window.zip = (function() {
     return node
   }
 
-  zip.trigger = function(node, type, data) {
+  poma.trigger = function(node, type, data) {
     var e = document.createEvent('HTMLEvents')
     e.initEvent(type, true, true)
     e.eventName = type
@@ -37,9 +37,9 @@ window.zip = (function() {
     return node
   }
 
-  zip.parentSelector = function(element, selector) {
+  poma.parentSelector = function(element, selector) {
     while (element) {
-      if (zip.matches.bind(element)(selector)) {
+      if (poma.matches.bind(element)(selector)) {
         return element
       } else {
         element = element.parentNode
@@ -48,40 +48,40 @@ window.zip = (function() {
     return false
   }
 
-  zip.parentSelectorAll = function(element, selector) {
-    console.error('zip.parentSelectorAll is not implemented!!!')
+  poma.parentSelectorAll = function(element, selector) {
+    console.error('poma.parentSelectorAll is not implemented!!!')
   }
 
   // http://stackoverflow.com/questions/5080028/what-is-the-most-efficient-way-to-concatenate-n-arrays-in-javascript
   // http://jsperf.com/multi-array-concat/7
-  zip.concat = function() {
-    console.error('zip.concat is not implemented!!!')
+  poma.concat = function() {
+    console.error('poma.concat is not implemented!!!')
   }
 
 
-  zip.remove = function(node) {
+  poma.remove = function(node) {
     return node.parentNode.removeChild(node)
   }
 
-  zip.offset = function(node) {
-    console.error('zip.offset is not implemented!!!')
+  poma.offset = function(node) {
+    console.error('poma.offset is not implemented!!!')
   }
 
-  zip.position = function(node) {
-    console.error('zip.position is not implemented!!!')
+  poma.position = function(node) {
+    console.error('poma.position is not implemented!!!')
   }
 
 
-  zip.plugin = function(object, fn) {
-    if (zip[fn]) {
-      console.error('function already exists on zip', object, fn)
+  poma.plugin = function(object, fn) {
+    if (poma[fn]) {
+      console.error('function already exists on poma', object, fn)
       return false
     }
-    zip[fn] = object[fn]
-    return zip[fn]
+    poma[fn] = object[fn]
+    return poma[fn]
   }
 
-  return zip
+  return poma
 
 })();
 
