@@ -1,10 +1,18 @@
 /*global poma */
 describe('poma', function() {
 
-  var el = document.getElementById('fixture')
+  var fixture = document.getElementById('fixture')
+  var container = document.getElementById('mocha')
   var divs = document.querySelectorAll('div')
   var noop = function(e) {}
   var trace = function(e) {console.log(e)}
+  var nested = '<div id="grandparent" class="box box-grandparent">' +
+                 '<div id="parent" class="box box-parent">' +
+                   '<div id="child" class="box box-child">' +
+                   '</div>' +
+                 '</div>' +
+               '</div>'
+
 
   describe('@instance', function() {
     it('is accessible in the global namespace', function() {
@@ -19,16 +27,16 @@ describe('poma', function() {
   describe('#on', function() {
     it('adds an event listener for Node', function() {
       var callback = sinon.spy()
-      poma.on(el, 'click', callback)
-      el.click()
+      poma.on(fixture, 'click', callback)
+      fixture.click()
       expect(callback.called).to.be.ok()
-      poma.off(el, 'click', callback)
+      poma.off(fixture, 'click', callback)
     })
 
     it('returns the node for chaining for Node', function() {
-      var node = poma.on(el, 'click', noop)
-      expect(node).to.be(el)
-      poma.off(el, 'click', noop)
+      var node = poma.on(fixture, 'click', noop)
+      expect(node).to.be(fixture)
+      poma.off(fixture, 'click', noop)
     })
 
     it('adds event listeners for NodeList', function() {
@@ -50,16 +58,16 @@ describe('poma', function() {
   describe('#off', function() {
     it('removes an event listener', function() {
       var callback = sinon.spy()
-      poma.on(el, 'click', callback)
-      poma.off(el, 'click', callback)
-      el.click()
+      poma.on(fixture, 'click', callback)
+      poma.off(fixture, 'click', callback)
+      fixture.click()
       expect(callback.called).not.to.be.ok()
     })
 
     it('returns the node for chaining ', function() {
-      poma.on(el, 'click', noop)
-      var node = poma.off(el, 'click', noop)
-      expect(node).to.be(el)
+      poma.on(fixture, 'click', noop)
+      var node = poma.off(fixture, 'click', noop)
+      expect(node).to.be(fixture)
     })
 
     it('removes event listeners for NodeList', function() {
@@ -81,9 +89,9 @@ describe('poma', function() {
   describe('#once', function() {
     it('only responds to a single call from a Node', function() {
       var callback = sinon.spy()
-      poma.once(el, 'click', callback)
-      el.click()
-      el.click()
+      poma.once(fixture, 'click', callback)
+      fixture.click()
+      fixture.click()
       expect(callback.calledOnce).to.be.ok()
     })
 
@@ -99,7 +107,7 @@ describe('poma', function() {
 
   describe('#event', function() {
     var obj = {baller:1}
-    var event = poma.event('custom:event', obj, el)
+    var event = poma.event('custom:event', obj, fixture)
 
     it('returns an event with eventName of "custom:event"', function() {
       expect(event.eventName).to.be('custom:event')
@@ -150,6 +158,142 @@ describe('poma', function() {
     it('sets poma.matches to a function', function() {
       expect(typeof poma.matches).to.be('function')
     })
+  })
+
+  describe('#parentSelector', function() {
+    var grandparent, parent, child
+    beforeEach(function() {
+      fixture.innerHTML = nested
+      grandparent = document.getElementById('grandparent')
+      parent = document.getElementById('parent')
+      child = document.getElementById('child')
+    })
+    afterEach(function() {
+      fixture.innerHTML = ''
+    })
+
+    it('selects parent from child using a common class', function() {
+      expect(poma.parentSelector(child, '.box')).to.be(parent)
+    })
+
+    it('selects grandparent from child using a specific class', function() {
+      expect(poma.parentSelector(child, '.box-grandparent')).to.be(grandparent)
+    })
+
+    it('selects grandparent from child using an id', function() {
+      expect(poma.parentSelector(child, '#grandparent')).to.be(grandparent)
+    })
+
+    it('selects body from parent using a tag', function() {
+      expect(poma.parentSelector(parent, 'body')).to.be(document.body)
+    })
+
+    it('selects the fixture from grandparent using a tag', function() {
+      expect(poma.parentSelector(grandparent, 'div')).to.be(fixture)
+    })
+
+    it('returns false if no nodes are found', function() {
+      expect(poma.parentSelector(child, '.null')).to.be(false)
+    })
+  })
+
+
+  describe('#parentSelectorAll', function() {
+    var grandparent, parent, child
+    beforeEach(function() {
+      fixture.innerHTML = nested
+      grandparent = document.getElementById('grandparent')
+      parent = document.getElementById('parent')
+      child = document.getElementById('child')
+    })
+    afterEach(function() {
+      fixture.innerHTML = ''
+    })
+
+    it('selects all of the .box elements from a class starting with the child', function() {
+      expect(poma.parentSelectorAll(child, '.box')).to.have.length(2)
+    })
+
+    it('selects all of the div elements from a class starting with the child', function() {
+      expect(poma.parentSelectorAll(child, 'div')).to.have.length(3)
+    })
+
+    it('returns false if no nodes are found', function() {
+      expect(poma.parentSelectorAll(child, '.null')).to.be(false)
+    })
+
+    it('returns an array with a single element from the child', function() {
+      var nodes = poma.parentSelectorAll(child, 'body')
+      expect(nodes).to.have.length(1)
+    })
+
+    it('returns the body packed in an array from the child', function() {
+      var nodes = poma.parentSelectorAll(child, 'body')
+      expect(nodes[0]).to.be(document.body)
+    })
+  })
+
+
+  describe('#remove', function() {
+    var grandparent, parent, child
+    beforeEach(function() {
+      fixture.innerHTML = nested
+      grandparent = document.getElementById('grandparent')
+      parent = document.getElementById('parent')
+      child = document.getElementById('child')
+    })
+    afterEach(function() {
+      fixture.innerHTML = ''
+    })
+
+    it('removes a child node', function() {
+      expect(fixture.querySelectorAll('.box')).to.have.length(3)
+      poma.remove(child)
+      expect(fixture.querySelectorAll('.box')).to.have.length(2)
+    })
+
+    it('removes child nodes', function() {
+      expect(fixture.querySelectorAll('.box')).to.have.length(3)
+      poma.remove(parent)
+      expect(fixture.querySelectorAll('.box')).to.have.length(1)
+    })
+
+    it('returns the removed node', function() {
+      expect(poma.remove(child)).to.be(child)
+    })
+  })
+
+
+  describe('#plugin', function() {
+    var obj
+    beforeEach(function() {
+      obj = {noop: function(){}, remove: function(){}}
+      poma.plugin(obj, 'noop')
+    })
+    afterEach(function() {
+      poma.noop = null
+    })
+
+    it('creates a reference to another object method within poma', function() {
+      expect(poma.noop).to.be.a('function')
+    })
+
+    it('references the object method from withing poma', function() {
+      expect(poma.noop).to.be(obj.noop)
+    })
+
+    it('calls the object method from within poma', function() {
+      var spy = sinon.spy(poma, 'noop')
+      var callback = sinon.spy()
+      poma.noop()
+      expect(spy.calledOnce).to.be.ok()
+    })
+
+    it('does not overwrite an existing function within poma', function() {
+      poma.plugin(obj, 'remove')
+      expect(poma.remove).not.to.be(obj.remove)
+    })
+
   })
 
 });

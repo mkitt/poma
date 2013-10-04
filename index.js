@@ -7,13 +7,13 @@ window.poma = (function() {
   }
 
   poma._execute = function(node, fn) {
-    var args = Array.prototype.slice.call(arguments, 2)
+    var args = [].slice.call(arguments, 2)
     node[fn].apply(node, args)
     return node
   }
 
   poma._executes = function(nodes, fn) {
-    var args = Array.prototype.slice.call(arguments, 2)
+    var args = [].slice.call(arguments, 2)
     for (var i = 0, len = nodes.length; i < len; i += 1) {
       nodes[i][fn].apply(nodes[i], args)
     }
@@ -62,25 +62,28 @@ window.poma = (function() {
     return b.matches || b.webkitMatchesSelector || b.mozMatchesSelector || b.msMatchesSelector
   })();
 
-  poma.parentSelector = function(element, selector) {
-    while (element) {
-      if (poma.matches.bind(element)(selector)) {
-        return element
+  poma.parentSelector = function(node, selector) {
+    node = node.parentNode
+    while (node && node !== document) {
+      if (poma.matches.bind(node)(selector)) {
+        return node
       } else {
-        element = element.parentNode
+        node = node.parentNode
       }
     }
     return false
   }
 
-  poma.parentSelectorAll = function(element, selector) {
-    console.error('poma.parentSelectorAll is not implemented!!!')
-  }
-
-  // http://stackoverflow.com/questions/5080028/what-is-the-most-efficient-way-to-concatenate-n-arrays-in-javascript
-  // http://jsperf.com/multi-array-concat/7
-  poma.concat = function() {
-    console.error('poma.concat is not implemented!!!')
+  poma.parentSelectorAll = function(node, selector) {
+    var nodes = []
+    node = node.parentNode
+    while (node !== document) {
+      if (poma.matches.bind(node)(selector)) {
+        nodes.push(node)
+      }
+      node = node.parentNode
+    }
+    return (nodes.length) ? nodes : false
   }
 
 
@@ -91,7 +94,7 @@ window.poma = (function() {
 
   poma.plugin = function(object, fn) {
     if (typeof poma[fn] === 'function')
-      return console.error(fn + ' already exists on poma');
+      return console.error('The "' + fn + '" function already exists on poma');
     poma[fn] = object[fn]
     return poma[fn]
   }
