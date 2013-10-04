@@ -2,40 +2,65 @@ window.poma = (function() {
 
   var poma = function() {}
 
-  poma.matches = (function() {
-    var b = document.body
-    return b.matches || b.webkitMatchesSelector || b.mozMatchesSelector || b.msMatchesSelector
-  })();
+  var _metafunc = function(node) {
+    return (node instanceof Node) ? '_execute' : '_executes'
+  }
 
-
-  poma.on = function(node, type, fn) {
-    node.addEventListener(type, fn, false)
+  poma._execute = function(node, fn) {
+    var args = Array.prototype.slice.call(arguments, 2)
+    node[fn].apply(node, args)
     return node
   }
 
+  poma._executes = function(nodes, fn) {
+    var args = Array.prototype.slice.call(arguments, 2)
+    for (var i = 0, len = nodes.length; i < len; i += 1) {
+      nodes[i][fn].apply(nodes[i], args)
+    }
+    return nodes
+  }
+
+// ## PUBLIC ##
+
+  poma.on = function(node, type, fn) {
+    var f = _metafunc(node)
+    return poma[f](node, 'addEventListener', type, fn, false)
+  }
+
   poma.off = function(node, type, fn) {
-    node.removeEventListener(type, fn, false)
-    return node
+    var f = _metafunc(node)
+    return poma[f](node, 'removeEventListener', type, fn, false)
   }
 
   poma.once = function(node, type, fn) {
     var handler = function(e) {
-      node.removeEventListener(type, handler, false)
+      poma.off(node, type, handler)
       fn(e)
     }
-    node.addEventListener(type, handler, false)
+    poma.on(node, type, handler)
     return node
   }
 
-  poma.trigger = function(node, type, data) {
+  poma.event = function(type, data, target) {
     var e = document.createEvent('HTMLEvents')
     e.initEvent(type, true, true)
     e.eventName = type
-    e.target = node
+    e.target = target || document
     e.data = data || {}
-    node.dispatchEvent(e)
-    return node
+    return e
   }
+
+  poma.trigger = function(node, type, data) {
+    var e = (typeof type === 'string') ? poma.event(type, data, node) : type
+    var f = _metafunc(node)
+    return poma[f](node, 'dispatchEvent', e)
+  }
+
+
+  poma.matches = (function() {
+    var b = document.body
+    return b.matches || b.webkitMatchesSelector || b.mozMatchesSelector || b.msMatchesSelector
+  })();
 
   poma.parentSelector = function(element, selector) {
     while (element) {
@@ -63,20 +88,10 @@ window.poma = (function() {
     return node.parentNode.removeChild(node)
   }
 
-  poma.offset = function(node) {
-    console.error('poma.offset is not implemented!!!')
-  }
-
-  poma.position = function(node) {
-    console.error('poma.position is not implemented!!!')
-  }
-
 
   poma.plugin = function(object, fn) {
-    if (poma[fn]) {
-      console.error('function already exists on poma', object, fn)
-      return false
-    }
+    if (typeof poma[fn] === 'function')
+      return console.error(fn + ' already exists on poma');
     poma[fn] = object[fn]
     return poma[fn]
   }
