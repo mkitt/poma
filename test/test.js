@@ -1,4 +1,4 @@
-/*global zip, sinon */
+/*global zip */
 describe('zip', function() {
 
   var el = document.body.querySelector('#fixture')
@@ -9,16 +9,6 @@ describe('zip', function() {
       expect(zip).not.to.be(null)
     })
 
-    // This won't work since the file is already loaded... 
-    it.skip('does not map "zip" to "$" if "$" is already defined', function() {
-      window.$ = {}
-      expect($).not.to.be(zip)
-      window.$ = zip
-    })
-
-    it('maps "zip" to "$"', function() {
-      expect($).to.be(zip)
-    })
   })
 
 

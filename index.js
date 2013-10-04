@@ -37,29 +37,6 @@ window.zip = (function() {
     return node
   }
 
-  zip.tapon = function(node, fn) {
-    node.addEventListener('click', zip.prevented, false)
-    if (typeof Hammer === "function")
-      Hammer(node, { stop_browser_behavior: false }).on('tap doubletap', fn)
-    return node
-  }
-
-  zip.tapoff = function(node, fn) {
-    node.removeEventListener('click', zip.prevented, false)
-    if (typeof Hammer === "function")
-      Hammer(node).off('tap doubletap', fn)
-    return node
-  }
-
-  zip.taponce = function(node, fn) {
-    console.error('zip.taponce is not implemented!!!')
-  }
-
-  zip.prevented = function(e) {
-    return e.preventDefault()
-  }
-
-
   zip.parentSelector = function(element, selector) {
     while (element) {
       if (zip.matches.bind(element)(selector)) {
@@ -75,6 +52,8 @@ window.zip = (function() {
     console.error('zip.parentSelectorAll is not implemented!!!')
   }
 
+  // http://stackoverflow.com/questions/5080028/what-is-the-most-efficient-way-to-concatenate-n-arrays-in-javascript
+  // http://jsperf.com/multi-array-concat/7
   zip.concat = function() {
     console.error('zip.concat is not implemented!!!')
   }
@@ -93,7 +72,15 @@ window.zip = (function() {
   }
 
 
-  if (!window.$) window.$ = zip
+  zip.plugin = function(object, fn) {
+    if (zip[fn]) {
+      console.error('function already exists on zip', object, fn)
+      return false
+    }
+    zip[fn] = object[fn]
+    return zip[fn]
+  }
+
   return zip
 
 })();

@@ -3,11 +3,10 @@ A minimalistic JavaScript event, selector and dom utility library.
 
 ## Tasks
 - Rename?
-- Move the $ out of here
-- Move taps to a Hammer plugin?
+- on/off/once should work with Node/NodeList
 - Write remaining functions
 - Finish specs
 - Document
-- Add bower/component/gem integration
+- Add component integration
 - Make the repo public
 
