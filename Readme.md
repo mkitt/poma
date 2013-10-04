@@ -1,14 +1,8 @@
 # poma
-Minimal utility-belt library for working with [`Node`][node],
+Minimal utility library for working with [`Node`][node],
 [`NodeList`][nodelist] and [`Event`][event] objects in modern browsers.
 Utilizes a functional style without extending any of the built-in DOM
 objects.
-
-
-## Todo
-- Add poma.position and poma.offset to issues as a feature
-- Add component integration
-- Make the repo public
 
 
 ## Installation
@@ -46,8 +40,8 @@ poma.off(elements, 'tap', tapped)
 ### poma.once(node, type, fn)
 `@returns node`
 
-Adds the event listener(s) and removes them after the first call. Handles
-either [`Node`][node] or [`NodeList`][nodelist] elements.
+Adds the event listener(s) and removes them after the first call.
+Handles either [`Node`][node] or [`NodeList`][nodelist] elements.
 
 ```javascript
 poma.once(elements, 'tap', tapped)
