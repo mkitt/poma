@@ -135,6 +135,18 @@ poma.noop()
 poma.plugin(obj, 'remove')
 ```
 
+## Dollar Sign
+Scope the `poma` object to the `$`, for easier reference after the
+`poma` library has loaded.
+
+
+```javascript
+if (!window.$)
+  window.$ = window.poma
+
+$.on(elements, 'tap', tapped)
+```
+
 
 <!-- Links -->
 [node]: https://developer.mozilla.org/en-US/docs/Web/API/Node
