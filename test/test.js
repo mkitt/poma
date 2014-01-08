@@ -264,6 +264,42 @@ describe('poma', function() {
   })
 
 
+  describe('#insertAfter', function() {
+    var grandparent, parent, child, element
+    beforeEach(function() {
+      fixture.innerHTML = nested
+      grandparent = document.getElementById('grandparent')
+      parent = document.getElementById('parent')
+      child = document.getElementById('child')
+      element = document.createElement('div')
+      element.id = 'element'
+    })
+    afterEach(function() {
+      fixture.innerHTML = ''
+    })
+
+    it('inserts the element after the grandparent', function() {
+      poma.insertAfter(element, grandparent)
+      expect(grandparent.nextSibling).to.be(element)
+    })
+
+    it('inserts the element after the parent', function() {
+      poma.insertAfter(element, parent)
+      expect(parent.nextSibling).to.be(element)
+    })
+
+    it('inserts the element after the child', function() {
+      poma.insertAfter(element, child)
+      expect(child.nextSibling).to.be(element)
+    })
+
+    it('returns the element that was just inserted', function() {
+      var el = poma.insertAfter(element, child)
+      expect(el).to.be(element)
+    })
+  })
+
+
   describe('#plugin', function() {
     var obj
     beforeEach(function() {

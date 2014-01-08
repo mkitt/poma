@@ -117,6 +117,17 @@ var removed = poma.remove(parent)
 ```
 
 
+### poma.insertAfter(node, target)
+`@returns node`
+
+Inserts the `node` in the DOM after the `target` element.
+
+```javascript
+var target = document.getElementById('target')
+var element = poma.insertAfter(document.createElement('div'), target)
+```
+
+
 ### poma.plugin(object, fn)
 `@returns poma.fn` or `Error`
 
