@@ -96,9 +96,8 @@ window.poma = (function() {
     var parent = target.parentNode
     if (parent.lastchild === target) {
       return parent.appendChild(node)
-    } else {
-      return parent.insertBefore(node, target.nextSibling)
     }
+    return parent.insertBefore(node, target.nextSibling)
   }
 
 
